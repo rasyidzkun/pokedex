@@ -20,8 +20,13 @@ const colors = {
 const mainTypes = Object.keys(colors)
 
 async function fetchPokemon() {
-    for(let i = 1; i <= pokemonNumber; i++){
-        await getPokemon(i)
+    try {
+        for(let i = 1; i <= pokemonNumber; i++){
+            await getPokemon(i)
+        }
+    } catch(err) {
+        console.log(err)
+        alert(`Error fetching API`)
     }
 }
 
@@ -32,20 +37,18 @@ async function getPokemon(id) {
     createPokemonCard(pokemon)   
 }
 
-fetchPokemon()
-
 function createPokemonCard(pokemon) {
     const pokemonEl = document.createElement("div")
     pokemonEl.classList.add("pokemon")
-
+    
     const pokeTypes = pokemon.types.map(el => el.type.name)
-    const type = mainTypes.find(type => pokeTypes.indexOf(type) > -1)
-
+    const type = mainTypes.find(type => pokeTypes.indexOf(type) > -1 )
+    
     const name = pokemon.name[0].toUpperCase() + pokemon.name.slice(1)
     const color = colors[type]
-
+    
     pokemonEl.style.backgroundColor = color
-
+    
     const pokeInnerHTML = `
     <div class="img-container">
         <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png" alt="${name}"
@@ -56,9 +59,11 @@ function createPokemonCard(pokemon) {
         <small class="type">Type: <span>${type}</span></small>
     </div>
     `
-
+    
     pokemonEl.innerHTML = pokeInnerHTML
     pokeContainer.appendChild(pokemonEl)
 }
+
+fetchPokemon()
 
 {/* <img src="https://unpkg.com/pokeapi-sprites@2.0.2/sprites/pokemon/other/dream-world/${pokemon.id}.svg" alt="${name}" */}
